@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Upload, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -23,14 +23,16 @@ export interface FieldDef {
     required?: boolean;
 }
 
+export type FormValue = string | File | null;
+
 interface ItemDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     title: string;
     description: string;
     fields: FieldDef[];
-    initialValues?: Record<string, string>;
-    onSubmit: (values: Record<string, string>) => void;
+    initialValues?: Record<string, FormValue>;
+    onSubmit: (values: Record<string, FormValue>) => void;
 }
 
 export function ItemDialog({
@@ -42,31 +44,60 @@ export function ItemDialog({
     initialValues,
     onSubmit,
 }: ItemDialogProps) {
-    const [values, setValues] = useState<Record<string, string>>({});
+    const [values, setValues] = useState<Record<string, FormValue>>({});
     const [dragField, setDragField] = useState<string | null>(null);
+
+    const imagePreviewUrls = useMemo(() => {
+        const previewMap: Record<string, string> = {};
+
+        fields.forEach((field) => {
+            if (field.type !== 'image') {
+                return;
+            }
+
+            const value = values[field.name];
+
+            if (value instanceof File) {
+                previewMap[field.name] = URL.createObjectURL(value);
+                return;
+            }
+
+            if (typeof value === 'string') {
+                previewMap[field.name] = value;
+            }
+        });
+
+        return previewMap;
+    }, [fields, values]);
 
     useEffect(() => {
         if (!open) {
             return;
         }
 
-        const seed: Record<string, string> = {};
+        const seed: Record<string, FormValue> = {};
         fields.forEach((field) => {
             seed[field.name] = initialValues?.[field.name] ?? '';
         });
         setValues(seed);
     }, [fields, initialValues, open]);
 
+    useEffect(() => {
+        return () => {
+            Object.values(imagePreviewUrls).forEach((previewUrl) => {
+                if (previewUrl.startsWith('blob:')) {
+                    URL.revokeObjectURL(previewUrl);
+                }
+            });
+        };
+    }, [imagePreviewUrls]);
+
     const readFile = (file: File, name: string) => {
         if (!file.type.startsWith('image/')) {
             return;
         }
 
-        const reader = new FileReader();
-        reader.onload = () => {
-            setValues((current) => ({ ...current, [name]: reader.result as string }));
-        };
-        reader.readAsDataURL(file);
+        setValues((current) => ({ ...current, [name]: file }));
     };
 
     return (
@@ -95,7 +126,7 @@ export function ItemDialog({
                                     id={field.name}
                                     placeholder={field.placeholder}
                                     required={field.required}
-                                    value={values[field.name] ?? ''}
+                                    value={typeof values[field.name] === 'string' ? values[field.name] : ''}
                                     onChange={(event) => {
                                         setValues((current) => ({ ...current, [field.name]: event.target.value }));
                                     }}
@@ -124,19 +155,21 @@ export function ItemDialog({
                                                 : 'flex cursor-pointer flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed border-border p-6 text-center transition hover:border-primary/60 hover:bg-muted/40'
                                         }
                                     >
-                                        {values[field.name] ? (
+                                        {imagePreviewUrls[field.name] ? (
                                             <div className="relative">
-                                                <img src={values[field.name]} alt="preview" className="max-h-40 rounded" />
-                                                <button
-                                                    type="button"
-                                                    onClick={(event) => {
-                                                        event.preventDefault();
-                                                        setValues((current) => ({ ...current, [field.name]: '' }));
-                                                    }}
-                                                    className="absolute -right-2 -top-2 rounded-full bg-destructive p-1 text-destructive-foreground"
-                                                >
-                                                    <X className="h-3 w-3" />
-                                                </button>
+                                                <img src={imagePreviewUrls[field.name]} alt="preview" className="max-h-40 rounded" />
+                                                {!field.required ? (
+                                                    <button
+                                                        type="button"
+                                                        onClick={(event) => {
+                                                            event.preventDefault();
+                                                            setValues((current) => ({ ...current, [field.name]: '' }));
+                                                        }}
+                                                        className="absolute -right-2 -top-2 rounded-full bg-destructive p-1 text-destructive-foreground"
+                                                    >
+                                                        <X className="h-3 w-3" />
+                                                    </button>
+                                                ) : null}
                                             </div>
                                         ) : (
                                             <>
@@ -150,7 +183,7 @@ export function ItemDialog({
                                             type="file"
                                             accept="image/*"
                                             className="hidden"
-                                            required={field.required && !values[field.name]}
+                                            required={field.required && !imagePreviewUrls[field.name]}
                                             onChange={(event) => {
                                                 const file = event.target.files?.[0];
                                                 if (file) {
@@ -166,7 +199,7 @@ export function ItemDialog({
                                     type="text"
                                     placeholder={field.placeholder}
                                     required={field.required}
-                                    value={values[field.name] ?? ''}
+                                    value={typeof values[field.name] === 'string' ? values[field.name] : ''}
                                     onChange={(event) => {
                                         setValues((current) => ({ ...current, [field.name]: event.target.value }));
                                     }}

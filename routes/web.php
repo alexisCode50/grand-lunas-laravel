@@ -11,6 +11,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('dashboard/inicio/carrusel', [HomeCarouselController::class, 'store'])->name('dashboard.inicio.carousel.store');
     Route::delete('dashboard/inicio/carrusel/{homeCarouselImage}', [HomeCarouselController::class, 'destroy'])
         ->name('dashboard.inicio.carousel.destroy');
+    Route::post('dashboard/inicio/tarjetas', [HomeCarouselController::class, 'storeInfoCard'])
+        ->name('dashboard.inicio.info-cards.store');
+    Route::put('dashboard/inicio/tarjetas/{homeInfoCard}', [HomeCarouselController::class, 'updateInfoCard'])
+        ->name('dashboard.inicio.info-cards.update');
+    Route::delete('dashboard/inicio/tarjetas/{homeInfoCard}', [HomeCarouselController::class, 'destroyInfoCard'])
+        ->name('dashboard.inicio.info-cards.destroy');
     Route::inertia('dashboard/nosotros', 'dashboard/nosotros')->name('dashboard.nosotros');
     Route::inertia('dashboard/servicios', 'dashboard/servicios')->name('dashboard.servicios');
     Route::inertia('dashboard/galeria', 'dashboard/galeria')->name('dashboard.galeria');
