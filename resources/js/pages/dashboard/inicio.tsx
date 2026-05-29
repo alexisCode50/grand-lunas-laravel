@@ -4,16 +4,17 @@ import { CarouselSection } from '@/components/admin/sections/carousel-section';
 import { FaqSection } from '@/components/admin/sections/faq-section';
 import { InfoCardsSection } from '@/components/admin/sections/info-cards-section';
 import { ListSection } from '@/components/admin/sections/list-section';
-import type { CarouselImage, InfoCard, ListItem } from '@/components/admin/types';
+import type { CarouselImage, FAQ, InfoCard, ListItem } from '@/components/admin/types';
 import { AdminPanelLayout } from '@/layouts/admin-layout';
 
 interface Props {
     carouselImages: CarouselImage[];
     infoCards: InfoCard[];
     listItems: ListItem[];
+    faqs: FAQ[];
 }
 
-export default function DashboardInicio({ carouselImages, infoCards, listItems }: Props) {
+export default function DashboardInicio({ carouselImages, infoCards, listItems, faqs }: Props) {
     return (
         <>
             <Head title="Pagina de inicio" />
@@ -37,13 +38,7 @@ export default function DashboardInicio({ carouselImages, infoCards, listItems }
                     />
                     <FaqSection
                         number={4}
-                        seed={[
-                            {
-                                id: 'f1',
-                                question: 'Cual es el horario?',
-                                answer: 'Atendemos todos los dias de 9:00 a 21:00 h.',
-                            },
-                        ]}
+                        seed={faqs}
                     />
                 </div>
             </AdminPanelLayout>

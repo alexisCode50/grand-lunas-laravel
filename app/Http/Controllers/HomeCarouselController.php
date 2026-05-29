@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\HomeCarouselImage;
+use App\Models\HomeFaq;
 use App\Models\HomeInfoCard;
 use App\Models\HomeInfoListItem;
 use Illuminate\Http\RedirectResponse;
@@ -43,6 +44,14 @@ class HomeCarouselController extends Controller
                     'title' => $item->title,
                     'description' => $item->description,
                     'imageUrl' => $item->image_path ? asset('storage/'.$item->image_path) : null,
+                ]),
+            'faqs' => HomeFaq::query()
+                ->orderBy('id')
+                ->get()
+                ->map(fn (HomeFaq $faq) => [
+                    'id' => $faq->id,
+                    'question' => $faq->question,
+                    'answer' => $faq->answer,
                 ]),
         ]);
     }
@@ -183,6 +192,37 @@ class HomeCarouselController extends Controller
         }
 
         $homeInfoListItem->delete();
+
+        return to_route('dashboard.inicio');
+    }
+
+    public function storeFaq(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'question' => ['required', 'string', 'max:255'],
+            'answer' => ['required', 'string'],
+        ]);
+
+        HomeFaq::query()->create($validated);
+
+        return to_route('dashboard.inicio');
+    }
+
+    public function updateFaq(Request $request, HomeFaq $homeFaq): RedirectResponse
+    {
+        $validated = $request->validate([
+            'question' => ['required', 'string', 'max:255'],
+            'answer' => ['required', 'string'],
+        ]);
+
+        $homeFaq->update($validated);
+
+        return to_route('dashboard.inicio');
+    }
+
+    public function destroyFaq(HomeFaq $homeFaq): RedirectResponse
+    {
+        $homeFaq->delete();
 
         return to_route('dashboard.inicio');
     }

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\HomeCarouselImage;
+use App\Models\HomeFaq;
 use App\Models\HomeInfoCard;
 use App\Models\HomeInfoListItem;
 use App\Models\User;
@@ -192,5 +193,35 @@ class DashboardTest extends TestCase
             ->assertSessionHasErrors('image');
 
         $this->assertDatabaseEmpty('home_info_list_items');
+    }
+
+    public function test_authenticated_users_can_manage_home_faqs()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $this->post(route('dashboard.inicio.faqs.store'), [
+            'question' => 'Cual es el horario?',
+            'answer' => 'Atendemos todos los dias de 9:00 a 21:00 h.',
+        ])->assertRedirect(route('dashboard.inicio'));
+
+        $faq = HomeFaq::query()->first();
+
+        $this->assertNotNull($faq);
+        $this->assertSame('Cual es el horario?', $faq->question);
+
+        $this->put(route('dashboard.inicio.faqs.update', $faq), [
+            'question' => 'Aceptan mascotas?',
+            'answer' => 'Si, en habitaciones seleccionadas.',
+        ])->assertRedirect(route('dashboard.inicio'));
+
+        $faq->refresh();
+
+        $this->assertSame('Aceptan mascotas?', $faq->question);
+
+        $this->delete(route('dashboard.inicio.faqs.destroy', $faq))
+            ->assertRedirect(route('dashboard.inicio'));
+
+        $this->assertDatabaseEmpty('home_faqs');
     }
 }

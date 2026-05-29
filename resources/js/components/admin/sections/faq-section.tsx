@@ -1,9 +1,9 @@
+import { router } from '@inertiajs/react';
 import { useState } from 'react';
 import { Pencil, Plus, Trash2 } from 'lucide-react';
-import { ItemDialog, type FieldDef } from '@/components/admin/item-dialog';
+import { ItemDialog, type FieldDef, type FormValue } from '@/components/admin/item-dialog';
 import { EmptyState, SectionShell } from '@/components/admin/section-shell';
 import type { FAQ } from '@/components/admin/types';
-import { useCrud } from '@/components/admin/use-crud';
 import {
     Accordion,
     AccordionContent,
@@ -23,9 +23,46 @@ interface Props {
 }
 
 export function FaqSection({ number, seed = [] }: Props) {
-    const { items, create, update, remove } = useCrud<FAQ>(seed);
     const [open, setOpen] = useState(false);
     const [editing, setEditing] = useState<FAQ | null>(null);
+    const items = seed;
+
+    const handleSubmit = (values: Record<string, FormValue>) => {
+        const question = typeof values.question === 'string' ? values.question : '';
+        const answer = typeof values.answer === 'string' ? values.answer : '';
+
+        if (editing) {
+            router.put(`/dashboard/inicio/faqs/${editing.id}`, {
+                question,
+                answer,
+            }, {
+                preserveScroll: true,
+                onSuccess: () => {
+                    setEditing(null);
+                    setOpen(false);
+                },
+            });
+
+            return;
+        }
+
+        router.post('/dashboard/inicio/faqs', {
+            question,
+            answer,
+        }, {
+            preserveScroll: true,
+            onSuccess: () => {
+                setEditing(null);
+                setOpen(false);
+            },
+        });
+    };
+
+    const handleDelete = (id: FAQ['id']) => {
+        router.delete(`/dashboard/inicio/faqs/${id}`, {
+            preserveScroll: true,
+        });
+    };
 
     return (
         <>
@@ -81,7 +118,7 @@ export function FaqSection({ number, seed = [] }: Props) {
                                             <Button
                                                 size="sm"
                                                 variant="ghost"
-                                                onClick={() => remove(faq.id)}
+                                                onClick={() => handleDelete(faq.id)}
                                                 className="text-destructive hover:text-destructive"
                                             >
                                                 <Trash2 className="mr-1.5 h-3.5 w-3.5" /> Eliminar
@@ -97,20 +134,18 @@ export function FaqSection({ number, seed = [] }: Props) {
 
             <ItemDialog
                 open={open}
-                onOpenChange={setOpen}
+                onOpenChange={(nextOpen) => {
+                    setOpen(nextOpen);
+
+                    if (!nextOpen) {
+                        setEditing(null);
+                    }
+                }}
                 title={editing ? 'Editar pregunta' : 'Nueva pregunta frecuente'}
                 description="Redacta la pregunta tal como la vera el visitante y su respuesta."
                 fields={fields}
-                initialValues={editing ? (editing as unknown as Record<string, string>) : undefined}
-                onSubmit={(values) => {
-                    if (editing) {
-                        update(editing.id, values as Partial<FAQ>);
-                    } else {
-                        create(values as Omit<FAQ, 'id'>);
-                    }
-
-                    setEditing(null);
-                }}
+                initialValues={editing ? (editing as unknown as Record<string, FormValue>) : undefined}
+                onSubmit={handleSubmit}
             />
         </>
     );
