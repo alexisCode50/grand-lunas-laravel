@@ -4,15 +4,16 @@ import { CarouselSection } from '@/components/admin/sections/carousel-section';
 import { FaqSection } from '@/components/admin/sections/faq-section';
 import { InfoCardsSection } from '@/components/admin/sections/info-cards-section';
 import { ListSection } from '@/components/admin/sections/list-section';
-import type { CarouselImage, InfoCard } from '@/components/admin/types';
+import type { CarouselImage, InfoCard, ListItem } from '@/components/admin/types';
 import { AdminPanelLayout } from '@/layouts/admin-layout';
 
 interface Props {
     carouselImages: CarouselImage[];
     infoCards: InfoCard[];
+    listItems: ListItem[];
 }
 
-export default function DashboardInicio({ carouselImages, infoCards }: Props) {
+export default function DashboardInicio({ carouselImages, infoCards, listItems }: Props) {
     return (
         <>
             <Head title="Pagina de inicio" />
@@ -32,18 +33,7 @@ export default function DashboardInicio({ carouselImages, infoCards }: Props) {
                     />
                     <ListSection
                         number={3}
-                        seed={[
-                            {
-                                id: 'l1',
-                                title: 'Atencion personalizada',
-                                description: 'Nuestro equipo esta disponible para ti.',
-                            },
-                            {
-                                id: 'l2',
-                                title: 'Espacios comodos',
-                                description: 'Disenados para tu descanso.',
-                            },
-                        ]}
+                        seed={listItems}
                     />
                     <FaqSection
                         number={4}

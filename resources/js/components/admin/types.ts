@@ -18,6 +18,7 @@ export interface ListItem {
     id: ID;
     title: string;
     description: string;
+    imageUrl?: string;
 }
 
 export interface FAQ {

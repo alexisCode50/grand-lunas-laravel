@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\HomeCarouselImage;
 use App\Models\HomeInfoCard;
+use App\Models\HomeInfoListItem;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -32,6 +34,15 @@ class HomeCarouselController extends Controller
                     'title' => $card->title,
                     'description' => $card->description,
                     'imageUrl' => $card->image_path ? asset('storage/'.$card->image_path) : null,
+                ]),
+            'listItems' => HomeInfoListItem::query()
+                ->orderBy('id')
+                ->get()
+                ->map(fn (HomeInfoListItem $item) => [
+                    'id' => $item->id,
+                    'title' => $item->title,
+                    'description' => $item->description,
+                    'imageUrl' => $item->image_path ? asset('storage/'.$item->image_path) : null,
                 ]),
         ]);
     }
@@ -117,6 +128,61 @@ class HomeCarouselController extends Controller
         }
 
         $homeInfoCard->delete();
+
+        return to_route('dashboard.inicio');
+    }
+
+    public function storeListItem(Request $request): RedirectResponse
+    {
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+            'image' => ['required', 'image', 'max:5120'],
+        ]);
+
+        HomeInfoListItem::query()->create([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'image_path' => $request->file('image')->store('home-info-list-items', 'public'),
+        ]);
+
+        return to_route('dashboard.inicio');
+    }
+
+    public function updateListItem(Request $request, HomeInfoListItem $homeInfoListItem): RedirectResponse
+    {
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string'],
+            'image' => [Rule::requiredIf(!$homeInfoListItem->image_path), 'nullable', 'image', 'max:5120'],
+        ]);
+
+        $imagePath = $homeInfoListItem->image_path;
+
+        if ($request->hasFile('image')) {
+            if ($imagePath) {
+                Storage::disk('public')->delete($imagePath);
+            }
+
+            $imagePath = $request->file('image')->store('home-info-list-items', 'public');
+        }
+
+        $homeInfoListItem->update([
+            'title' => $validated['title'],
+            'description' => $validated['description'],
+            'image_path' => $imagePath,
+        ]);
+
+        return to_route('dashboard.inicio');
+    }
+
+    public function destroyListItem(HomeInfoListItem $homeInfoListItem): RedirectResponse
+    {
+        if ($homeInfoListItem->image_path) {
+            Storage::disk('public')->delete($homeInfoListItem->image_path);
+        }
+
+        $homeInfoListItem->delete();
 
         return to_route('dashboard.inicio');
     }

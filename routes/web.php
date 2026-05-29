@@ -17,6 +17,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('dashboard.inicio.info-cards.update');
     Route::delete('dashboard/inicio/tarjetas/{homeInfoCard}', [HomeCarouselController::class, 'destroyInfoCard'])
         ->name('dashboard.inicio.info-cards.destroy');
+    Route::post('dashboard/inicio/listado', [HomeCarouselController::class, 'storeListItem'])
+        ->name('dashboard.inicio.list-items.store');
+    Route::put('dashboard/inicio/listado/{homeInfoListItem}', [HomeCarouselController::class, 'updateListItem'])
+        ->name('dashboard.inicio.list-items.update');
+    Route::delete('dashboard/inicio/listado/{homeInfoListItem}', [HomeCarouselController::class, 'destroyListItem'])
+        ->name('dashboard.inicio.list-items.destroy');
     Route::inertia('dashboard/nosotros', 'dashboard/nosotros')->name('dashboard.nosotros');
     Route::inertia('dashboard/servicios', 'dashboard/servicios')->name('dashboard.servicios');
     Route::inertia('dashboard/galeria', 'dashboard/galeria')->name('dashboard.galeria');

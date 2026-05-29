@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\HomeCarouselImage;
 use App\Models\HomeInfoCard;
+use App\Models\HomeInfoListItem;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -139,5 +140,57 @@ class DashboardTest extends TestCase
             ->assertSessionHasErrors('image');
 
         $this->assertDatabaseEmpty('home_info_cards');
+    }
+
+    public function test_authenticated_users_can_manage_home_info_list_items()
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $this->post(route('dashboard.inicio.list-items.store'), [
+            'title' => 'Atencion personalizada',
+            'description' => 'Nuestro equipo esta disponible para ti.',
+            'image' => UploadedFile::fake()->image('list-item.jpg'),
+        ])->assertRedirect(route('dashboard.inicio'));
+
+        $item = HomeInfoListItem::query()->first();
+
+        $this->assertNotNull($item);
+        $this->assertSame('Atencion personalizada', $item->title);
+        $this->assertTrue(Storage::disk('public')->exists($item->image_path));
+
+        $this->put(route('dashboard.inicio.list-items.update', $item), [
+            'title' => 'Espacios comodos',
+            'description' => 'Disenados para tu descanso.',
+        ])->assertRedirect(route('dashboard.inicio'));
+
+        $item->refresh();
+
+        $this->assertSame('Espacios comodos', $item->title);
+        $this->assertNotNull($item->image_path);
+
+        $this->delete(route('dashboard.inicio.list-items.destroy', $item))
+            ->assertRedirect(route('dashboard.inicio'));
+
+        $this->assertDatabaseEmpty('home_info_list_items');
+        $this->assertFalse(Storage::disk('public')->exists($item->image_path));
+    }
+
+    public function test_authenticated_users_cannot_create_home_info_list_item_without_image()
+    {
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $this->from(route('dashboard.inicio'))
+            ->post(route('dashboard.inicio.list-items.store'), [
+                'title' => 'Elemento sin imagen',
+                'description' => 'Descripcion sin imagen',
+            ])
+            ->assertRedirect(route('dashboard.inicio'))
+            ->assertSessionHasErrors('image');
+
+        $this->assertDatabaseEmpty('home_info_list_items');
     }
 }
