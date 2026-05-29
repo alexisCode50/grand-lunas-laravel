@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { ImagePlus, Upload, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -11,38 +11,52 @@ import {
 } from '@/components/ui/dialog';
 import { cn } from '@/lib/utils';
 
+interface PreviewImage {
+    file: File;
+    previewUrl: string;
+}
+
 interface ImageDropzoneDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
-    onSubmit: (images: string[]) => void;
+    onSubmit: (images: File[]) => void;
+    resetKey?: number;
 }
 
-export function ImageDropzoneDialog({ open, onOpenChange, onSubmit }: ImageDropzoneDialogProps) {
-    const [previews, setPreviews] = useState<string[]>([]);
+export function ImageDropzoneDialog({ open, onOpenChange, onSubmit, resetKey = 0 }: ImageDropzoneDialogProps) {
+    const [previews, setPreviews] = useState<PreviewImage[]>([]);
     const [isDragOver, setIsDragOver] = useState(false);
+    const inputRef = useRef<HTMLInputElement | null>(null);
 
-    const readFile = (file: File): Promise<string> =>
-        new Promise((resolve, reject) => {
-            if (!file.type.startsWith('image/')) {
-                reject(new Error('Solo se permiten imagenes'));
-                return;
-            }
+    const clearPreviews = useCallback(() => {
+        setPreviews((current) => {
+            current.forEach((preview) => URL.revokeObjectURL(preview.previewUrl));
 
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result as string);
-            reader.onerror = () => reject(new Error('No se pudo leer la imagen'));
-            reader.readAsDataURL(file);
+            return [];
         });
+
+        if (inputRef.current) {
+            inputRef.current.value = '';
+        }
+    }, []);
+
+    useEffect(() => {
+        clearPreviews();
+    }, [clearPreviews, resetKey]);
 
     const handleFiles = async (files: FileList | null) => {
         if (!files) {
             return;
         }
 
-        const fileArray = Array.from(files).filter((file) => file.type.startsWith('image/'));
-        const results = await Promise.all(fileArray.map(readFile));
+        const nextPreviews = Array.from(files)
+            .filter((file) => file.type.startsWith('image/'))
+            .map((file) => ({
+                file,
+                previewUrl: URL.createObjectURL(file),
+            }));
 
-        setPreviews((prev) => [...prev, ...results]);
+        setPreviews((prev) => [...prev, ...nextPreviews]);
     };
 
     const onDrop = useCallback((event: React.DragEvent<HTMLDivElement>) => {
@@ -56,14 +70,12 @@ export function ImageDropzoneDialog({ open, onOpenChange, onSubmit }: ImageDropz
             return;
         }
 
-        onSubmit(previews);
-        setPreviews([]);
-        onOpenChange(false);
+        onSubmit(previews.map((preview) => preview.file));
     };
 
     const handleOpenChange = (value: boolean) => {
         if (!value) {
-            setPreviews([]);
+            clearPreviews();
         }
 
         onOpenChange(value);
@@ -98,6 +110,7 @@ export function ImageDropzoneDialog({ open, onOpenChange, onSubmit }: ImageDropz
                         )}
                     >
                         <input
+                            ref={inputRef}
                             type="file"
                             multiple
                             accept="image/*"
@@ -117,16 +130,24 @@ export function ImageDropzoneDialog({ open, onOpenChange, onSubmit }: ImageDropz
 
                     {previews.length > 0 ? (
                         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                            {previews.map((src, index) => (
+                            {previews.map((preview, index) => (
                                 <div
-                                    key={`${src.slice(0, 20)}-${index}`}
+                                    key={`${preview.file.name}-${index}`}
                                     className="group relative aspect-video overflow-hidden rounded-lg border"
                                 >
-                                    <img src={src} alt={`Vista previa ${index + 1}`} className="h-full w-full object-cover" />
+                                    <img src={preview.previewUrl} alt={`Vista previa ${index + 1}`} className="h-full w-full object-cover" />
                                     <button
                                         type="button"
                                         onClick={() => {
-                                            setPreviews((prev) => prev.filter((_, itemIndex) => itemIndex !== index));
+                                            setPreviews((prev) => {
+                                                const item = prev[index];
+
+                                                if (item) {
+                                                    URL.revokeObjectURL(item.previewUrl);
+                                                }
+
+                                                return prev.filter((_, itemIndex) => itemIndex !== index);
+                                            });
                                         }}
                                         className="absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/60 text-white opacity-0 transition-opacity group-hover:opacity-100 hover:bg-black/80"
                                     >

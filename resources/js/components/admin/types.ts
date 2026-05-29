@@ -1,4 +1,4 @@
-export type ID = string;
+export type ID = string | number;
 
 export interface CarouselImage {
     id: ID;

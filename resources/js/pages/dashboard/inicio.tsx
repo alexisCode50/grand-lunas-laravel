@@ -4,9 +4,14 @@ import { CarouselSection } from '@/components/admin/sections/carousel-section';
 import { FaqSection } from '@/components/admin/sections/faq-section';
 import { InfoCardsSection } from '@/components/admin/sections/info-cards-section';
 import { ListSection } from '@/components/admin/sections/list-section';
+import type { CarouselImage } from '@/components/admin/types';
 import { AdminPanelLayout } from '@/layouts/admin-layout';
 
-export default function DashboardInicio() {
+interface Props {
+    carouselImages: CarouselImage[];
+}
+
+export default function DashboardInicio({ carouselImages }: Props) {
     return (
         <>
             <Head title="Pagina de inicio" />
@@ -18,12 +23,7 @@ export default function DashboardInicio() {
                 <div className="space-y-6">
                     <CarouselSection
                         number={1}
-                        seed={[
-                            {
-                                id: 'c1',
-                                imageUrl: 'https://images.unsplash.com/photo-1518684079-3c830dcef090?w=1200&q=80',
-                            },
-                        ]}
+                        seed={carouselImages}
                     />
                     <InfoCardsSection
                         number={2}

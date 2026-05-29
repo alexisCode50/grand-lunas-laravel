@@ -1,9 +1,9 @@
+import { router } from '@inertiajs/react';
 import { useState } from 'react';
 import { ImageIcon, Plus, Trash2 } from 'lucide-react';
 import { ImageDropzoneDialog } from '@/components/admin/image-dropzone-dialog';
 import { EmptyState, SectionShell } from '@/components/admin/section-shell';
 import type { CarouselImage } from '@/components/admin/types';
-import { useCrud } from '@/components/admin/use-crud';
 import { Button } from '@/components/ui/button';
 
 interface Props {
@@ -13,8 +13,31 @@ interface Props {
 }
 
 export function CarouselSection({ number, title = 'Carrusel de imagenes', seed = [] }: Props) {
-    const { items, create, remove } = useCrud<CarouselImage>(seed);
     const [open, setOpen] = useState(false);
+    const [resetKey, setResetKey] = useState(0);
+    const items = seed;
+
+    const handleSubmit = (images: File[]) => {
+        const formData = new FormData();
+
+        images.forEach((image) => {
+            formData.append('images[]', image);
+        });
+
+        router.post('/dashboard/inicio/carrusel', formData, {
+            preserveScroll: true,
+            onSuccess: () => {
+                setResetKey((current) => current + 1);
+                setOpen(false);
+            },
+        });
+    };
+
+    const handleDelete = (id: CarouselImage['id']) => {
+        router.delete(`/dashboard/inicio/carrusel/${id}`, {
+            preserveScroll: true,
+        });
+    };
 
     return (
         <>
@@ -57,7 +80,7 @@ export function CarouselSection({ number, title = 'Carrusel de imagenes', seed =
                                     <Button
                                         size="sm"
                                         variant="ghost"
-                                        onClick={() => remove(image.id)}
+                                        onClick={() => handleDelete(image.id)}
                                         className="text-destructive hover:text-destructive"
                                     >
                                         <Trash2 className="mr-1.5 h-3.5 w-3.5" /> Eliminar
@@ -72,9 +95,8 @@ export function CarouselSection({ number, title = 'Carrusel de imagenes', seed =
             <ImageDropzoneDialog
                 open={open}
                 onOpenChange={setOpen}
-                onSubmit={(images) => {
-                    images.forEach((imageUrl) => create({ imageUrl }));
-                }}
+                onSubmit={handleSubmit}
+                resetKey={resetKey}
             />
         </>
     );
