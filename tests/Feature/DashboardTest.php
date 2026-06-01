@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\AboutInfoCard;
 use App\Models\HomeCarouselImage;
 use App\Models\HomeFaq;
 use App\Models\HomeInfoCard;
@@ -45,6 +46,7 @@ class DashboardTest extends TestCase
             ->assertInertia(fn (Assert $page) => $page
                 ->component('dashboard/nosotros')
                 ->has('startCards', 0)
+                ->has('infoCards', 0)
             );
 
         $this->post(route('dashboard.nosotros.start-cards.store'), [
@@ -71,6 +73,44 @@ class DashboardTest extends TestCase
             ->assertRedirect(route('dashboard.nosotros'));
 
         $this->assertDatabaseEmpty('home_start_cards');
+        $this->assertFalse(Storage::disk('public')->exists($card->image_path));
+    }
+
+    public function test_authenticated_users_can_manage_about_info_cards_in_nosotros_page()
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $this->post(route('dashboard.nosotros.info-cards.store'), [
+            'title' => 'Nuestro enfoque',
+            'description' => 'Cuidamos cada detalle de la experiencia del huesped.',
+            'image' => UploadedFile::fake()->image('about-info-card.jpg'),
+        ])->assertRedirect(route('dashboard.nosotros'));
+
+        $card = AboutInfoCard::query()->first();
+
+        $this->assertNotNull($card);
+        $this->assertSame('Nuestro enfoque', $card->title);
+        $this->assertSame('Cuidamos cada detalle de la experiencia del huesped.', $card->description);
+        $this->assertTrue(Storage::disk('public')->exists($card->image_path));
+
+        $this->put(route('dashboard.nosotros.info-cards.update', $card), [
+            'title' => 'Nuestro nuevo enfoque',
+            'description' => 'Actualizamos el mensaje principal de la empresa.',
+        ])->assertRedirect(route('dashboard.nosotros'));
+
+        $card->refresh();
+
+        $this->assertSame('Nuestro nuevo enfoque', $card->title);
+        $this->assertSame('Actualizamos el mensaje principal de la empresa.', $card->description);
+        $this->assertNotNull($card->image_path);
+
+        $this->delete(route('dashboard.nosotros.info-cards.destroy', $card))
+            ->assertRedirect(route('dashboard.nosotros'));
+
+        $this->assertDatabaseEmpty('about_info_cards');
         $this->assertFalse(Storage::disk('public')->exists($card->image_path));
     }
 

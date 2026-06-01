@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AboutInfoCard;
 use App\Models\HomeStartCard;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -23,6 +24,15 @@ class HomeStartCardController extends Controller
                 ->map(fn (HomeStartCard $card) => [
                     'id' => $card->id,
                     'title' => $card->title,
+                    'imageUrl' => asset('storage/'.$card->image_path),
+                ]),
+            'infoCards' => AboutInfoCard::query()
+                ->orderBy('id')
+                ->get()
+                ->map(fn (AboutInfoCard $card) => [
+                    'id' => $card->id,
+                    'title' => $card->title,
+                    'description' => $card->description,
                     'imageUrl' => asset('storage/'.$card->image_path),
                 ]),
         ]);

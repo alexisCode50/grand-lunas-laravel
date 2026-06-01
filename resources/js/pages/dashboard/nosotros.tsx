@@ -12,9 +12,10 @@ const startCardsFields: FieldDef[] = [
 
 interface Props {
     startCards: InfoCard[];
+    infoCards: InfoCard[];
 }
 
-export default function DashboardNosotros({ startCards }: Props) {
+export default function DashboardNosotros({ startCards, infoCards }: Props) {
     return (
         <>
             <Head title="Pagina de nosotros" />
@@ -36,6 +37,8 @@ export default function DashboardNosotros({ startCards }: Props) {
                         number={2}
                         title="Tarjetas con informacion"
                         description="Bloques adicionales con mas detalle sobre la empresa."
+                        seed={infoCards}
+                        resourcePath="/dashboard/nosotros/tarjetas-informacion"
                     />
                 </div>
             </AdminPanelLayout>
