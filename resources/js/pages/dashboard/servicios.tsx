@@ -2,14 +2,15 @@ import { Head } from '@inertiajs/react';
 import { PageHeader } from '@/components/admin/page-header';
 import { FaqSection } from '@/components/admin/sections/faq-section';
 import { InfoCardsSection } from '@/components/admin/sections/info-cards-section';
-import type { InfoCard } from '@/components/admin/types';
+import type { FAQ, InfoCard } from '@/components/admin/types';
 import { AdminPanelLayout } from '@/layouts/admin-layout';
 
 interface Props {
     infoCards: InfoCard[];
+    faqs: FAQ[];
 }
 
-export default function DashboardServicios({ infoCards }: Props) {
+export default function DashboardServicios({ infoCards, faqs }: Props) {
     return (
         <>
             <Head title="Pagina de servicios" />
@@ -26,7 +27,11 @@ export default function DashboardServicios({ infoCards }: Props) {
                         seed={infoCards}
                         resourcePath="/dashboard/servicios/tarjetas-informacion"
                     />
-                    <FaqSection number={2} />
+                    <FaqSection
+                        number={2}
+                        seed={faqs}
+                        resourcePath="/dashboard/servicios/faqs"
+                    />
                 </div>
             </AdminPanelLayout>
         </>

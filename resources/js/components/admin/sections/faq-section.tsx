@@ -20,9 +20,10 @@ const fields: FieldDef[] = [
 interface Props {
     number: number;
     seed?: FAQ[];
+    resourcePath?: string;
 }
 
-export function FaqSection({ number, seed = [] }: Props) {
+export function FaqSection({ number, seed = [], resourcePath = '/dashboard/inicio/faqs' }: Props) {
     const [open, setOpen] = useState(false);
     const [editing, setEditing] = useState<FAQ | null>(null);
     const items = seed;
@@ -32,7 +33,7 @@ export function FaqSection({ number, seed = [] }: Props) {
         const answer = typeof values.answer === 'string' ? values.answer : '';
 
         if (editing) {
-            router.put(`/dashboard/inicio/faqs/${editing.id}`, {
+            router.put(`${resourcePath}/${editing.id}`, {
                 question,
                 answer,
             }, {
@@ -46,7 +47,7 @@ export function FaqSection({ number, seed = [] }: Props) {
             return;
         }
 
-        router.post('/dashboard/inicio/faqs', {
+        router.post(resourcePath, {
             question,
             answer,
         }, {
@@ -59,7 +60,7 @@ export function FaqSection({ number, seed = [] }: Props) {
     };
 
     const handleDelete = (id: FAQ['id']) => {
-        router.delete(`/dashboard/inicio/faqs/${id}`, {
+        router.delete(`${resourcePath}/${id}`, {
             preserveScroll: true,
         });
     };

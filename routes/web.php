@@ -3,6 +3,7 @@
 use App\Http\Controllers\AboutInfoCardController;
 use App\Http\Controllers\HomeCarouselController;
 use App\Http\Controllers\HomeStartCardController;
+use App\Http\Controllers\ServiceFaqController;
 use App\Http\Controllers\ServiceInfoCardController;
 use Illuminate\Support\Facades\Route;
 
@@ -52,6 +53,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('dashboard.servicios.info-cards.update');
     Route::delete('dashboard/servicios/tarjetas-informacion/{serviceInfoCard}', [ServiceInfoCardController::class, 'destroy'])
         ->name('dashboard.servicios.info-cards.destroy');
+    Route::post('dashboard/servicios/faqs', [ServiceFaqController::class, 'store'])
+        ->name('dashboard.servicios.faqs.store');
+    Route::put('dashboard/servicios/faqs/{serviceFaq}', [ServiceFaqController::class, 'update'])
+        ->name('dashboard.servicios.faqs.update');
+    Route::delete('dashboard/servicios/faqs/{serviceFaq}', [ServiceFaqController::class, 'destroy'])
+        ->name('dashboard.servicios.faqs.destroy');
     Route::inertia('dashboard/galeria', 'dashboard/galeria')->name('dashboard.galeria');
 });
 

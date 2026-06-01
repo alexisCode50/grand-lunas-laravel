@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ServiceFaq;
 use App\Models\ServiceInfoCard;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -25,6 +26,14 @@ class ServiceInfoCardController extends Controller
                     'title' => $card->title,
                     'description' => $card->description,
                     'imageUrl' => asset('storage/'.$card->image_path),
+                ]),
+            'faqs' => ServiceFaq::query()
+                ->orderBy('id')
+                ->get()
+                ->map(fn (ServiceFaq $faq) => [
+                    'id' => $faq->id,
+                    'question' => $faq->question,
+                    'answer' => $faq->answer,
                 ]),
         ]);
     }
