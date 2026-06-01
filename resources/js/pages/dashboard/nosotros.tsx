@@ -2,14 +2,19 @@ import { Head } from '@inertiajs/react';
 import { type FieldDef } from '@/components/admin/item-dialog';
 import { PageHeader } from '@/components/admin/page-header';
 import { InfoCardsSection } from '@/components/admin/sections/info-cards-section';
+import type { InfoCard } from '@/components/admin/types';
 import { AdminPanelLayout } from '@/layouts/admin-layout';
 
 const startCardsFields: FieldDef[] = [
     { name: 'title', label: 'Titulo de la tarjeta', type: 'text', required: true },
-    { name: 'imageUrl', label: 'Imagen (opcional)', type: 'image' },
+    { name: 'imageUrl', label: 'Imagen', type: 'image', required: true },
 ];
 
-export default function DashboardNosotros() {
+interface Props {
+    startCards: InfoCard[];
+}
+
+export default function DashboardNosotros({ startCards }: Props) {
     return (
         <>
             <Head title="Pagina de nosotros" />
@@ -23,7 +28,9 @@ export default function DashboardNosotros() {
                         number={1}
                         title="Tarjetas de inicio"
                         description="Tarjetas destacadas que aparecen al inicio de la pagina."
+                        seed={startCards}
                         fields={startCardsFields}
+                        resourcePath="/dashboard/nosotros/tarjetas-inicio"
                     />
                     <InfoCardsSection
                         number={2}

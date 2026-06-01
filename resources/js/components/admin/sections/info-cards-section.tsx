@@ -18,6 +18,8 @@ interface Props {
     description?: string;
     seed?: InfoCard[];
     fields?: FieldDef[];
+    resourcePath?: string;
+    maxItems?: number;
 }
 
 export function InfoCardsSection({
@@ -26,21 +28,27 @@ export function InfoCardsSection({
     description = 'Bloques con titulo, texto e imagen obligatoria.',
     seed = [],
     fields,
+    resourcePath = '/dashboard/inicio/tarjetas',
+    maxItems = 3,
 }: Props) {
     const activeFields = fields ?? defaultFields;
     const [open, setOpen] = useState(false);
     const [editing, setEditing] = useState<InfoCard | null>(null);
     const items = seed;
-    const canCreateMore = items.length < 3;
+    const canCreateMore = items.length < maxItems;
 
     const handleSubmit = (values: Record<string, FormValue>) => {
         const formData = new FormData();
         const title = typeof values.title === 'string' ? values.title : '';
-        const descriptionValue = typeof values.description === 'string' ? values.description : '';
         const imageValue = values.imageUrl;
+        const hasDescriptionField = activeFields.some((field) => field.name === 'description');
 
         formData.append('title', title);
-        formData.append('description', descriptionValue);
+
+        if (hasDescriptionField) {
+            const descriptionValue = typeof values.description === 'string' ? values.description : '';
+            formData.append('description', descriptionValue);
+        }
 
         if (imageValue instanceof File) {
             formData.append('image', imageValue);
@@ -49,7 +57,7 @@ export function InfoCardsSection({
         if (editing) {
             formData.append('_method', 'put');
 
-            router.post(`/dashboard/inicio/tarjetas/${editing.id}`, formData, {
+            router.post(`${resourcePath}/${editing.id}`, formData, {
                 preserveScroll: true,
                 onSuccess: () => {
                     setEditing(null);
@@ -60,7 +68,7 @@ export function InfoCardsSection({
             return;
         }
 
-        router.post('/dashboard/inicio/tarjetas', formData, {
+        router.post(resourcePath, formData, {
             preserveScroll: true,
             onSuccess: () => {
                 setEditing(null);
@@ -70,7 +78,7 @@ export function InfoCardsSection({
     };
 
     const handleDelete = (id: InfoCard['id']) => {
-        router.delete(`/dashboard/inicio/tarjetas/${id}`, {
+        router.delete(`${resourcePath}/${id}`, {
             preserveScroll: true,
         });
     };
@@ -112,7 +120,7 @@ export function InfoCardsSection({
                     <div className="space-y-3">
                         {!canCreateMore ? (
                             <p className="text-sm text-muted-foreground">
-                                Ya alcanzaste el maximo de 3 tarjetas. Elimina una para poder crear otra.
+                                Ya alcanzaste el maximo de {maxItems} tarjetas. Elimina una para poder crear otra.
                             </p>
                         ) : null}
                         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

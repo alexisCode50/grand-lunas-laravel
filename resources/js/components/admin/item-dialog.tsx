@@ -115,7 +115,11 @@ export function ItemDialog({
                     }}
                     className="space-y-4"
                 >
-                    {fields.map((field) => (
+                    {fields.map((field) => {
+                        const rawValue = values[field.name];
+                        const textValue = typeof rawValue === 'string' ? rawValue : '';
+
+                        return (
                         <div key={field.name} className="space-y-2">
                             <Label htmlFor={field.name} className="text-sm font-medium">
                                 {field.label}
@@ -126,7 +130,7 @@ export function ItemDialog({
                                     id={field.name}
                                     placeholder={field.placeholder}
                                     required={field.required}
-                                    value={typeof values[field.name] === 'string' ? values[field.name] : ''}
+                                    value={textValue}
                                     onChange={(event) => {
                                         setValues((current) => ({ ...current, [field.name]: event.target.value }));
                                     }}
@@ -199,14 +203,15 @@ export function ItemDialog({
                                     type="text"
                                     placeholder={field.placeholder}
                                     required={field.required}
-                                    value={typeof values[field.name] === 'string' ? values[field.name] : ''}
+                                    value={textValue}
                                     onChange={(event) => {
                                         setValues((current) => ({ ...current, [field.name]: event.target.value }));
                                     }}
                                 />
                             )}
                         </div>
-                    ))}
+                        );
+                    })}
                     <DialogFooter className="gap-2">
                         <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                             Cancelar

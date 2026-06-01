@@ -6,10 +6,12 @@ use App\Models\HomeCarouselImage;
 use App\Models\HomeFaq;
 use App\Models\HomeInfoCard;
 use App\Models\HomeInfoListItem;
+use App\Models\HomeStartCard;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
 class DashboardTest extends TestCase
@@ -29,6 +31,47 @@ class DashboardTest extends TestCase
 
         $response = $this->get(route('dashboard'));
         $response->assertOk();
+    }
+
+    public function test_authenticated_users_can_manage_home_start_cards_in_nosotros_page()
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $this->get(route('dashboard.nosotros'))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('dashboard/nosotros')
+                ->has('startCards', 0)
+            );
+
+        $this->post(route('dashboard.nosotros.start-cards.store'), [
+            'title' => 'Historia del hotel',
+            'image' => UploadedFile::fake()->image('start-card.jpg'),
+        ])->assertRedirect(route('dashboard.nosotros'));
+
+        $card = HomeStartCard::query()->first();
+
+        $this->assertNotNull($card);
+        $this->assertSame('Historia del hotel', $card->title);
+        $this->assertTrue(Storage::disk('public')->exists($card->image_path));
+
+        $this->put(route('dashboard.nosotros.start-cards.update', $card), [
+            'title' => 'Nueva historia del hotel',
+        ])->assertRedirect(route('dashboard.nosotros'));
+
+        $card->refresh();
+
+        $this->assertSame('Nueva historia del hotel', $card->title);
+        $this->assertNotNull($card->image_path);
+
+        $this->delete(route('dashboard.nosotros.start-cards.destroy', $card))
+            ->assertRedirect(route('dashboard.nosotros'));
+
+        $this->assertDatabaseEmpty('home_start_cards');
+        $this->assertFalse(Storage::disk('public')->exists($card->image_path));
     }
 
     public function test_authenticated_users_can_manage_home_carousel_images()

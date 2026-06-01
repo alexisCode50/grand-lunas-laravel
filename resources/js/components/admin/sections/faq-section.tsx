@@ -100,7 +100,7 @@ export function FaqSection({ number, seed = [] }: Props) {
                     <div className="space-y-3">
                         <Accordion type="single" collapsible className="rounded-lg border bg-background">
                             {items.map((faq) => (
-                                <AccordionItem key={faq.id} value={faq.id} className="px-4">
+                                <AccordionItem key={faq.id} value={String(faq.id)} className="px-4">
                                     <AccordionTrigger className="text-left font-medium">{faq.question}</AccordionTrigger>
                                     <AccordionContent className="space-y-3 text-muted-foreground">
                                         <p>{faq.answer}</p>
