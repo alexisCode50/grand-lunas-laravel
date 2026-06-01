@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AboutInfoCardController;
+use App\Http\Controllers\Api\PageContentController;
 use App\Http\Controllers\GalleryCarouselController;
 use App\Http\Controllers\HomeCarouselController;
 use App\Http\Controllers\HomeStartCardController;
@@ -9,6 +10,10 @@ use App\Http\Controllers\ServiceInfoCardController;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'welcome')->name('home');
+Route::get('/home', [PageContentController::class, 'home'])->name('api.home');
+Route::get('/about', [PageContentController::class, 'about'])->name('api.about');
+Route::get('/services', [PageContentController::class, 'services'])->name('api.services');
+Route::get('/gallery', [PageContentController::class, 'gallery'])->name('api.gallery');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
