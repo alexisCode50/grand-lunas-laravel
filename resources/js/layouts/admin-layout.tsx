@@ -27,15 +27,15 @@ export function AdminPanelLayout({ children }: PropsWithChildren) {
             <aside className="sticky top-0 hidden h-screen w-72 shrink-0 flex-col border-r bg-sidebar text-sidebar-foreground lg:flex">
                 <div className="flex items-center gap-3 border-b border-sidebar-border px-6 py-5">
                     <img
-                        src="https://yucatan.lacasadelaslunas.com/logo-grand-lunas-yucatan.svg"
+                        src="/imagenes/grand-lunas-yucatan.svg"
                         alt="Grand Lunas Yucatan"
-                        className="h-10 w-auto"
+                        className="w-full max-w-[70px] mx-auto"
                     />
                 </div>
 
                 <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
                     <p className="px-3 pb-2 pt-2 text-[11px] font-semibold uppercase tracking-[0.16em] text-sidebar-foreground/50">
-                        Navegacion
+                        Navegación
                     </p>
                     {navItems.map((item) => {
                         const active = isCurrentUrl(item.href, currentUrl);
@@ -70,29 +70,16 @@ export function AdminPanelLayout({ children }: PropsWithChildren) {
                         );
                     })}
                 </nav>
-
-                <div className="border-t border-sidebar-border p-4">
-                    <div className="flex items-start gap-3 rounded-md bg-sidebar-accent p-3">
-                        <LifeBuoy className="mt-0.5 h-4 w-4 text-primary" />
-                        <div className="text-xs leading-snug text-sidebar-foreground/85">
-                            <p className="font-medium text-sidebar-foreground">Necesitas ayuda?</p>
-                            <p className="text-sidebar-foreground/70">
-                                Cada seccion incluye instrucciones claras para crear, editar y eliminar.
-                            </p>
-                        </div>
-                    </div>
-                </div>
             </aside>
 
             <div className="flex w-full min-w-0 flex-col">
-                <header className="flex items-center justify-between border-b bg-background px-4 py-3 lg:hidden">
+                <header className="flex items-center justify-center border-b bg-background px-4 py-3 lg:hidden">
                     <div className="flex items-center gap-2">
                         <img
-                            src="https://yucatan.lacasadelaslunas.com/logo-grand-lunas-yucatan.svg"
+                            src="/imagenes/grand-lunas-yucatan-logo.svg"
                             alt="Grand Lunas Yucatan"
-                            className="h-8 w-auto"
+                            className="w-full max-w-[50px] mx-auto"
                         />
-                        <span className="text-sm font-semibold">Panel</span>
                     </div>
                 </header>
 
