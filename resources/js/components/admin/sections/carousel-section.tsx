@@ -10,9 +10,21 @@ interface Props {
     number: number;
     title?: string;
     seed?: CarouselImage[];
+    description?: string;
+    storeUrl?: string;
+    destroyUrlBase?: string;
+    emptyMessage?: string;
 }
 
-export function CarouselSection({ number, title = 'Carrusel de imagenes', seed = [] }: Props) {
+export function CarouselSection({
+    number,
+    title = 'Carrusel de imagenes',
+    seed = [],
+    description = 'Imagenes grandes que se muestran al inicio de la pagina, una tras otra.',
+    storeUrl = '/dashboard/inicio/carrusel',
+    destroyUrlBase = '/dashboard/inicio/carrusel',
+    emptyMessage = 'Aun no hay imagenes en el carrusel.',
+}: Props) {
     const [open, setOpen] = useState(false);
     const [resetKey, setResetKey] = useState(0);
     const items = seed;
@@ -24,7 +36,7 @@ export function CarouselSection({ number, title = 'Carrusel de imagenes', seed =
             formData.append('images[]', image);
         });
 
-        router.post('/dashboard/inicio/carrusel', formData, {
+        router.post(storeUrl, formData, {
             preserveScroll: true,
             onSuccess: () => {
                 setResetKey((current) => current + 1);
@@ -34,7 +46,7 @@ export function CarouselSection({ number, title = 'Carrusel de imagenes', seed =
     };
 
     const handleDelete = (id: CarouselImage['id']) => {
-        router.delete(`/dashboard/inicio/carrusel/${id}`, {
+        router.delete(`${destroyUrlBase}/${id}`, {
             preserveScroll: true,
         });
     };
@@ -44,7 +56,7 @@ export function CarouselSection({ number, title = 'Carrusel de imagenes', seed =
             <SectionShell
                 number={number}
                 title={title}
-                description="Imagenes grandes que se muestran al inicio de la pagina, una tras otra."
+                description={description}
                 actions={
                     <Button onClick={() => setOpen(true)}>
                         <Plus className="mr-2 h-4 w-4" /> Agregar imagen
@@ -53,7 +65,7 @@ export function CarouselSection({ number, title = 'Carrusel de imagenes', seed =
             >
                 {items.length === 0 ? (
                     <EmptyState
-                        message="Aun no hay imagenes en el carrusel."
+                        message={emptyMessage}
                         action={
                             <Button variant="outline" onClick={() => setOpen(true)}>
                                 <Plus className="mr-2 h-4 w-4" /> Agregar la primera imagen

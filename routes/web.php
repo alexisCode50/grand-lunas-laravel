@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AboutInfoCardController;
+use App\Http\Controllers\GalleryCarouselController;
 use App\Http\Controllers\HomeCarouselController;
 use App\Http\Controllers\HomeStartCardController;
 use App\Http\Controllers\ServiceFaqController;
@@ -59,7 +60,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('dashboard.servicios.faqs.update');
     Route::delete('dashboard/servicios/faqs/{serviceFaq}', [ServiceFaqController::class, 'destroy'])
         ->name('dashboard.servicios.faqs.destroy');
-    Route::inertia('dashboard/galeria', 'dashboard/galeria')->name('dashboard.galeria');
+    Route::get('dashboard/galeria', [GalleryCarouselController::class, 'index'])->name('dashboard.galeria');
+    Route::post('dashboard/galeria/carrusel', [GalleryCarouselController::class, 'store'])
+        ->name('dashboard.galeria.carousel.store');
+    Route::delete('dashboard/galeria/carrusel/{galleryCarouselImage}', [GalleryCarouselController::class, 'destroy'])
+        ->name('dashboard.galeria.carousel.destroy');
 });
 
 require __DIR__.'/settings.php';
