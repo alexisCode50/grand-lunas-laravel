@@ -13,7 +13,7 @@ import {
 import { Button } from '@/components/ui/button';
 
 const fields: FieldDef[] = [
-    { name: 'question', label: 'Pregunta', type: 'text', required: true, placeholder: 'Ej. Cual es el horario?' },
+    { name: 'question', label: 'Pregunta', type: 'text', required: true, placeholder: 'Ej. ¿Cuál es el horario?' },
     { name: 'answer', label: 'Respuesta', type: 'textarea', required: true },
 ];
 
@@ -70,7 +70,7 @@ export function FaqSection({ number, seed = [], resourcePath = '/dashboard/inici
             <SectionShell
                 number={number}
                 title="Preguntas frecuentes"
-                description="Listado de preguntas y respuestas que se mostraran en el sitio."
+                description="Listado de preguntas y respuestas que se mostrarán en el sitio."
                 actions={
                     <Button
                         onClick={() => {
@@ -84,7 +84,7 @@ export function FaqSection({ number, seed = [], resourcePath = '/dashboard/inici
             >
                 {items.length === 0 ? (
                     <EmptyState
-                        message="No hay preguntas frecuentes todavia."
+                        message="No hay preguntas frecuentes todavía."
                         action={
                             <Button
                                 variant="outline"
@@ -143,7 +143,7 @@ export function FaqSection({ number, seed = [], resourcePath = '/dashboard/inici
                     }
                 }}
                 title={editing ? 'Editar pregunta' : 'Nueva pregunta frecuente'}
-                description="Redacta la pregunta tal como la vera el visitante y su respuesta."
+                description="Redacta la pregunta tal como la verá el visitante y su respuesta."
                 fields={fields}
                 initialValues={editing ? (editing as unknown as Record<string, FormValue>) : undefined}
                 onSubmit={handleSubmit}

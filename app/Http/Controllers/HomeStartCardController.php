@@ -42,7 +42,7 @@ class HomeStartCardController extends Controller
     {
         if (HomeStartCard::query()->count() >= self::MAX_START_CARDS) {
             return back()->withErrors([
-                'title' => 'Solo se permiten 3 tarjetas de inicio en la pagina de nosotros.',
+                'title' => 'Solo se permiten 3 tarjetas de inicio en la página de nosotros.',
             ]);
         }
 

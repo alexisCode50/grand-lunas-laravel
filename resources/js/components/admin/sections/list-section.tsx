@@ -7,8 +7,8 @@ import type { ListItem } from '@/components/admin/types';
 import { Button } from '@/components/ui/button';
 
 const fields: FieldDef[] = [
-    { name: 'title', label: 'Titulo del elemento', type: 'text', required: true },
-    { name: 'description', label: 'Descripcion', type: 'textarea', required: true },
+    { name: 'title', label: 'Título del elemento', type: 'text', required: true },
+    { name: 'description', label: 'Descripción', type: 'textarea', required: true },
     { name: 'imageUrl', label: 'Imagen', type: 'image', required: true },
 ];
 
@@ -68,8 +68,8 @@ export function ListSection({ number, seed = [] }: Props) {
         <>
             <SectionShell
                 number={number}
-                title="Listado con informacion"
-                description="Elementos con titulo, descripcion e imagen obligatoria."
+                title="Listado con información"
+                description="Elementos con título, descripción e imagen obligatoria."
                 actions={
                     <Button
                         onClick={() => {

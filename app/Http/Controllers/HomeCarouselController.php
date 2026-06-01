@@ -84,7 +84,7 @@ class HomeCarouselController extends Controller
     {
         if (HomeInfoCard::query()->count() >= self::MAX_HOME_INFO_CARDS) {
             return back()->withErrors([
-                'title' => 'Solo se permiten 3 tarjetas de informacion en la pagina de inicio.',
+                'title' => 'Solo se permiten 3 tarjetas de información en la página de inicio.',
             ]);
         }
 

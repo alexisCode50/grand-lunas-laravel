@@ -42,7 +42,7 @@ class ServiceInfoCardController extends Controller
     {
         if (ServiceInfoCard::query()->count() >= self::MAX_INFO_CARDS) {
             return back()->withErrors([
-                'title' => 'Solo se permiten 3 tarjetas con informacion en la pagina de servicios.',
+                'title' => 'Solo se permiten 3 tarjetas con información en la página de servicios.',
             ]);
         }
 

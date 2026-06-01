@@ -13,16 +13,16 @@ interface Props {
 export default function DashboardServicios({ infoCards, faqs }: Props) {
     return (
         <>
-            <Head title="Pagina de servicios" />
+            <Head title="Página de servicios" />
             <AdminPanelLayout>
                 <PageHeader
-                    title="Pagina de servicios"
-                    subtitle="Muestra los servicios que ofrece Grand Lunas y resuelve las dudas mas comunes."
+                    title="Página de servicios"
+                    subtitle="Muestra los servicios que ofrece Grand Lunas y resuelve las dudas más comunes."
                 />
                 <div className="space-y-6">
                     <InfoCardsSection
                         number={1}
-                        title="Tarjetas con informacion"
+                        title="Tarjetas con información"
                         description="Cada tarjeta representa un servicio que ofreces."
                         seed={infoCards}
                         resourcePath="/dashboard/servicios/tarjetas-informacion"

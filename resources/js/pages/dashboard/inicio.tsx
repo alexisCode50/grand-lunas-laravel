@@ -17,11 +17,11 @@ interface Props {
 export default function DashboardInicio({ carouselImages, infoCards, listItems, faqs }: Props) {
     return (
         <>
-            <Head title="Pagina de inicio" />
+            <Head title="Página de inicio" />
             <AdminPanelLayout>
                 <PageHeader
-                    title="Pagina de inicio"
-                    subtitle="Esta es la primera pagina que veran tus visitantes. Gestiona cada una de sus secciones."
+                    title="Página de inicio"
+                    subtitle="Esta es la primera página que verán tus visitantes. Gestiona cada una de sus secciones."
                 />
                 <div className="space-y-6">
                     <CarouselSection

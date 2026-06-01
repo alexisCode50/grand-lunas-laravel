@@ -178,7 +178,7 @@ export function ItemDialog({
                                         ) : (
                                             <>
                                                 <Upload className="h-6 w-6 text-muted-foreground" />
-                                                <p className="text-sm font-medium">Arrastra y suelta una imagen aqui</p>
+                                                <p className="text-sm font-medium">Arrastra y suelta una imagen aquí</p>
                                                 <p className="text-xs text-muted-foreground">o haz clic para seleccionarla</p>
                                             </>
                                         )}

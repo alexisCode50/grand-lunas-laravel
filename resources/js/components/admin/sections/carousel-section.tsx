@@ -18,12 +18,12 @@ interface Props {
 
 export function CarouselSection({
     number,
-    title = 'Carrusel de imagenes',
+    title = 'Carrusel de imágenes',
     seed = [],
-    description = 'Imagenes grandes que se muestran al inicio de la pagina, una tras otra.',
+    description = 'Imágenes grandes que se muestran al inicio de la página, una tras otra.',
     storeUrl = '/dashboard/inicio/carrusel',
     destroyUrlBase = '/dashboard/inicio/carrusel',
-    emptyMessage = 'Aun no hay imagenes en el carrusel.',
+    emptyMessage = 'Aún no hay imágenes en el carrusel.',
 }: Props) {
     const [open, setOpen] = useState(false);
     const [resetKey, setResetKey] = useState(0);

@@ -13,10 +13,10 @@ interface NavItem {
 
 const navItems: NavItem[] = [
     { href: '/dashboard', label: 'Inicio del panel', description: 'Resumen', icon: LayoutDashboard },
-    { href: '/dashboard/inicio', label: 'Pagina de inicio', description: '4 secciones', icon: Home },
-    { href: '/dashboard/nosotros', label: 'Pagina de nosotros', description: '2 secciones', icon: Info },
-    { href: '/dashboard/servicios', label: 'Pagina de servicios', description: '2 secciones', icon: Wrench },
-    { href: '/dashboard/galeria', label: 'Pagina de galeria', description: '1 seccion', icon: Images },
+    { href: '/dashboard/inicio', label: 'Página de inicio', description: '4 secciones', icon: Home },
+    { href: '/dashboard/nosotros', label: 'Página de nosotros', description: '2 secciones', icon: Info },
+    { href: '/dashboard/servicios', label: 'Página de servicios', description: '2 secciones', icon: Wrench },
+    { href: '/dashboard/galeria', label: 'Página de galería', description: '1 sección', icon: Images },
 ];
 
 export function AdminPanelLayout({ children }: PropsWithChildren) {

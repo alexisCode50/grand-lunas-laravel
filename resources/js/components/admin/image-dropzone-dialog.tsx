@@ -85,9 +85,9 @@ export function ImageDropzoneDialog({ open, onOpenChange, onSubmit, resetKey = 0
         <Dialog open={open} onOpenChange={handleOpenChange}>
             <DialogContent className="sm:max-w-2xl">
                 <DialogHeader>
-                    <DialogTitle>Agregar imagenes al carrusel</DialogTitle>
+                    <DialogTitle>Agregar imágenes al carrusel</DialogTitle>
                     <DialogDescription>
-                        Arrastra y suelta las imagenes aqui o haz clic para seleccionarlas desde tu computadora.
+                        Arrastra y suelta las imágenes aquí o haz clic para seleccionarlas desde tu computadora.
                     </DialogDescription>
                 </DialogHeader>
 
@@ -123,7 +123,7 @@ export function ImageDropzoneDialog({ open, onOpenChange, onSubmit, resetKey = 0
                             <Upload className="h-6 w-6 text-primary" />
                         </div>
                         <div className="text-center">
-                            <p className="text-sm font-medium text-foreground">Arrastra las imagenes aqui</p>
+                            <p className="text-sm font-medium text-foreground">Arrastra las imágenes aquí</p>
                             <p className="text-xs text-muted-foreground">O haz clic para seleccionar archivos</p>
                         </div>
                     </div>

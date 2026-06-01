@@ -7,8 +7,8 @@ import type { InfoCard } from '@/components/admin/types';
 import { Button } from '@/components/ui/button';
 
 const defaultFields: FieldDef[] = [
-    { name: 'title', label: 'Titulo de la tarjeta', type: 'text', required: true },
-    { name: 'description', label: 'Descripcion', type: 'textarea', required: true },
+    { name: 'title', label: 'Título de la tarjeta', type: 'text', required: true },
+    { name: 'description', label: 'Descripción', type: 'textarea', required: true },
     { name: 'imageUrl', label: 'Imagen', type: 'image', required: true },
 ];
 
@@ -24,8 +24,8 @@ interface Props {
 
 export function InfoCardsSection({
     number,
-    title = 'Tarjetas con informacion',
-    description = 'Bloques con titulo, texto e imagen obligatoria.',
+    title = 'Tarjetas con información',
+    description = 'Bloques con título, texto e imagen obligatoria.',
     seed = [],
     fields,
     resourcePath = '/dashboard/inicio/tarjetas',
@@ -103,7 +103,7 @@ export function InfoCardsSection({
             >
                 {items.length === 0 ? (
                     <EmptyState
-                        message="Todavia no hay tarjetas creadas."
+                        message="Todavía no hay tarjetas creadas."
                         action={
                             <Button
                                 variant="outline"
@@ -120,7 +120,7 @@ export function InfoCardsSection({
                     <div className="space-y-3">
                         {!canCreateMore ? (
                             <p className="text-sm text-muted-foreground">
-                                Ya alcanzaste el maximo de {maxItems} tarjetas. Elimina una para poder crear otra.
+                                Ya alcanzaste el máximo de {maxItems} tarjetas. Elimina una para poder crear otra.
                             </p>
                         ) : null}
                         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -176,7 +176,7 @@ export function InfoCardsSection({
                     }
                 }}
                 title={editing ? 'Editar tarjeta' : 'Nueva tarjeta'}
-                description="Completa el contenido que veran los visitantes del sitio."
+                description="Completa el contenido que verán los visitantes del sitio."
                 fields={activeFields}
                 initialValues={editing ? (editing as unknown as Record<string, FormValue>) : undefined}
                 onSubmit={handleSubmit}

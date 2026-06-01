@@ -11,18 +11,18 @@ interface Props {
 export default function DashboardGaleria({ carouselImages }: Props) {
     return (
         <>
-            <Head title="Pagina de galeria" />
+            <Head title="Página de galería" />
             <AdminPanelLayout>
                 <PageHeader
-                    title="Pagina de galeria"
-                    subtitle="Sube y administra las imagenes que se mostraran en la galeria del sitio."
+                    title="Página de galería"
+                    subtitle="Sube y administra las imágenes que se mostrarán en la galería del sitio."
                 />
                 <div className="space-y-6">
                     <CarouselSection
                         number={1}
-                        title="Carrusel de la galeria"
-                        description="Imagenes destacadas que se mostraran en la pagina de galeria."
-                        emptyMessage="Aun no hay imagenes en el carrusel de la galeria."
+                        title="Carrusel de la galería"
+                        description="Imágenes destacadas que se mostrarán en la página de galería."
+                        emptyMessage="Aún no hay imágenes en el carrusel de la galería."
                         storeUrl="/dashboard/galeria/carrusel"
                         destroyUrlBase="/dashboard/galeria/carrusel"
                         seed={carouselImages}

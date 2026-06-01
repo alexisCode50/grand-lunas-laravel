@@ -7,29 +7,29 @@ export default function Dashboard() {
     const pages = [
         {
             href: '/dashboard/inicio',
-            label: 'Pagina de inicio',
+            label: 'Página de inicio',
             description: 'Carrusel, tarjetas, listado y preguntas frecuentes.',
             icon: Home,
             sections: 4,
         },
         {
             href: '/dashboard/nosotros',
-            label: 'Pagina de nosotros',
-            description: 'Tarjetas de presentacion e informacion.',
+            label: 'Página de nosotros',
+            description: 'Tarjetas de presentación e información.',
             icon: Info,
             sections: 2,
         },
         {
             href: '/dashboard/servicios',
-            label: 'Pagina de servicios',
+            label: 'Página de servicios',
             description: 'Tarjetas de servicios y preguntas frecuentes.',
             icon: Wrench,
             sections: 2,
         },
         {
             href: '/dashboard/galeria',
-            label: 'Pagina de galeria',
-            description: 'Carrusel de imagenes de la galeria.',
+            label: 'Página de galería',
+            description: 'Carrusel de imágenes de la galería.',
             icon: Images,
             sections: 1,
         },
@@ -41,7 +41,7 @@ export default function Dashboard() {
             <AdminPanelLayout>
                 <PageHeader
                     title="Bienvenido al panel de Grand Lunas"
-                    subtitle="Elige una pagina del sitio para editar su contenido. Cada seccion tiene botones claros para agregar, editar y eliminar la informacion."
+                    subtitle="Elige una página del sitio para editar su contenido. Cada sección tiene botones claros para agregar, editar y eliminar la información."
                 />
 
                 <div className="grid gap-4 sm:grid-cols-2">
@@ -64,7 +64,7 @@ export default function Dashboard() {
                                     </div>
                                     <p className="mt-1 text-sm text-muted-foreground">{page.description}</p>
                                     <p className="mt-3 inline-flex items-center rounded-full bg-secondary px-2.5 py-0.5 text-[11px] font-medium text-secondary-foreground">
-                                        {page.sections} {page.sections === 1 ? 'seccion' : 'secciones'}
+                                        {page.sections} {page.sections === 1 ? 'sección' : 'secciones'}
                                     </p>
                                 </div>
                             </Link>
@@ -78,9 +78,9 @@ export default function Dashboard() {
                         Consejo
                     </div>
                     <p className="mt-1 text-sm text-muted-foreground">
-                        Los cambios que guardes aqui se reflejaran en el sitio publico. Si tienes dudas, usa los botones
+                        Los cambios que guardes aquí se reflejarán en el sitio público. Si tienes dudas, usa los botones
                         <span className="mx-1 font-medium text-primary">Agregar</span>
-                        o <span className="font-medium text-primary">Editar</span> dentro de cada seccion.
+                        o <span className="font-medium text-primary">Editar</span> dentro de cada sección.
                     </p>
                 </div>
             </AdminPanelLayout>
