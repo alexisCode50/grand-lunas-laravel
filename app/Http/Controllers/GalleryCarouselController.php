@@ -28,7 +28,13 @@ class GalleryCarouselController extends Controller
     {
         $validated = $request->validate([
             'images' => ['required', 'array', 'min:1'],
-            'images.*' => ['required', 'image', 'max:5120'],
+            'images.*' => [
+                'required', 
+                'file', 
+                'mimetypes:image/jpeg,image/png,image/webp,image/gif,image/svg+xml,image/avif', 
+                'extensions:jpg,jpeg,png,webp,gif,svg,avif', 
+                'max:5120'
+            ],
         ]);
 
         foreach ($validated['images'] as $image) {

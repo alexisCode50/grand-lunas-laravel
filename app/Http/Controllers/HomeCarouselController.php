@@ -60,7 +60,13 @@ class HomeCarouselController extends Controller
     {
         $validated = $request->validate([
             'images' => ['required', 'array', 'min:1'],
-            'images.*' => ['required', 'image', 'max:5120'],
+            'images.*' => [
+                'required', 
+                'file', 
+                'mimetypes:image/jpeg,image/png,image/webp,image/gif,image/svg+xml,image/avif', 
+                'extensions:jpg,jpeg,png,webp,gif,svg,avif', 
+                'max:5120'
+            ],
         ]);
 
         foreach ($validated['images'] as $image) {
@@ -91,7 +97,13 @@ class HomeCarouselController extends Controller
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
-            'image' => ['required', 'image', 'max:5120'],
+            'image' => [
+                'required', 
+                'file', 
+                'mimetypes:image/jpeg,image/png,image/webp,image/gif,image/svg+xml,image/avif', 
+                'extensions:jpg,jpeg,png,webp,gif,svg,avif', 
+                'max:5120'
+            ],
         ]);
 
         HomeInfoCard::query()->create([
@@ -108,7 +120,13 @@ class HomeCarouselController extends Controller
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
-            'image' => ['nullable', 'image', 'max:5120'],
+            'image' => [
+                'nullable', 
+                'file', 
+                'mimetypes:image/jpeg,image/png,image/webp,image/gif,image/svg+xml,image/avif', 
+                'extensions:jpg,jpeg,png,webp,gif,svg,avif', 
+                'max:5120'
+            ],
         ]);
 
         $imagePath = $homeInfoCard->image_path;
@@ -146,7 +164,13 @@ class HomeCarouselController extends Controller
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
-            'image' => ['required', 'image', 'max:5120'],
+            'image' => [
+                'required', 
+                'file', 
+                'mimetypes:image/jpeg,image/png,image/webp,image/gif,image/svg+xml,image/avif', 
+                'extensions:jpg,jpeg,png,webp,gif,svg,avif', 
+                'max:5120'
+            ],
         ]);
 
         HomeInfoListItem::query()->create([
@@ -163,7 +187,14 @@ class HomeCarouselController extends Controller
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
-            'image' => [Rule::requiredIf(!$homeInfoListItem->image_path), 'nullable', 'image', 'max:5120'],
+            'image' => [
+                Rule::requiredIf(!$homeInfoListItem->image_path), 
+                'nullable', 
+                'file', 
+                'mimetypes:image/jpeg,image/png,image/webp,image/gif,image/svg+xml,image/avif', 
+                'extensions:jpg,jpeg,png,webp,gif,svg,avif', 
+                'max:5120'
+            ],
         ]);
 
         $imagePath = $homeInfoListItem->image_path;

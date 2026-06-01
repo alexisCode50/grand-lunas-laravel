@@ -48,7 +48,13 @@ class HomeStartCardController extends Controller
 
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
-            'image' => ['required', 'image', 'max:5120'],
+            'image' => [
+                'required', 
+                'file', 
+                'mimetypes:image/jpeg,image/png,image/webp,image/gif,image/svg+xml,image/avif', 
+                'extensions:jpg,jpeg,png,webp,gif,svg,avif', 
+                'max:5120'
+            ],
         ]);
 
         HomeStartCard::query()->create([
@@ -63,7 +69,14 @@ class HomeStartCardController extends Controller
     {
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
-            'image' => [Rule::requiredIf(!$homeStartCard->image_path), 'nullable', 'image', 'max:5120'],
+            'image' => [
+                Rule::requiredIf(!$homeStartCard->image_path), 
+                'nullable', 
+                'file', 
+                'mimetypes:image/jpeg,image/png,image/webp,image/gif,image/svg+xml,image/avif', 
+                'extensions:jpg,jpeg,png,webp,gif,svg,avif', 
+                'max:5120'
+            ],
         ]);
 
         $imagePath = $homeStartCard->image_path;

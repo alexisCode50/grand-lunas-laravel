@@ -49,7 +49,13 @@ class ServiceInfoCardController extends Controller
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
-            'image' => ['required', 'image', 'max:5120'],
+            'image' => [
+                'required', 
+                'file', 
+                'mimetypes:image/jpeg,image/png,image/webp,image/gif,image/svg+xml,image/avif', 
+                'extensions:jpg,jpeg,png,webp,gif,svg,avif', 
+                'max:5120'
+            ],
         ]);
 
         ServiceInfoCard::query()->create([
@@ -66,7 +72,14 @@ class ServiceInfoCardController extends Controller
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
-            'image' => [Rule::requiredIf(!$serviceInfoCard->image_path), 'nullable', 'image', 'max:5120'],
+            'image' => [
+                Rule::requiredIf(!$serviceInfoCard->image_path), 
+                'nullable', 
+                'file', 
+                'mimetypes:image/jpeg,image/png,image/webp,image/gif,image/svg+xml,image/avif', 
+                'extensions:jpg,jpeg,png,webp,gif,svg,avif', 
+                'max:5120'
+            ],
         ]);
 
         $imagePath = $serviceInfoCard->image_path;
