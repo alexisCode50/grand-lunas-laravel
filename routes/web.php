@@ -3,6 +3,7 @@
 use App\Http\Controllers\AboutInfoCardController;
 use App\Http\Controllers\HomeCarouselController;
 use App\Http\Controllers\HomeStartCardController;
+use App\Http\Controllers\ServiceInfoCardController;
 use Illuminate\Support\Facades\Route;
 
 Route::inertia('/', 'welcome')->name('home');
@@ -44,7 +45,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('dashboard.nosotros.info-cards.update');
     Route::delete('dashboard/nosotros/tarjetas-informacion/{aboutInfoCard}', [AboutInfoCardController::class, 'destroy'])
         ->name('dashboard.nosotros.info-cards.destroy');
-    Route::inertia('dashboard/servicios', 'dashboard/servicios')->name('dashboard.servicios');
+    Route::get('dashboard/servicios', [ServiceInfoCardController::class, 'index'])->name('dashboard.servicios');
+    Route::post('dashboard/servicios/tarjetas-informacion', [ServiceInfoCardController::class, 'store'])
+        ->name('dashboard.servicios.info-cards.store');
+    Route::put('dashboard/servicios/tarjetas-informacion/{serviceInfoCard}', [ServiceInfoCardController::class, 'update'])
+        ->name('dashboard.servicios.info-cards.update');
+    Route::delete('dashboard/servicios/tarjetas-informacion/{serviceInfoCard}', [ServiceInfoCardController::class, 'destroy'])
+        ->name('dashboard.servicios.info-cards.destroy');
     Route::inertia('dashboard/galeria', 'dashboard/galeria')->name('dashboard.galeria');
 });
 

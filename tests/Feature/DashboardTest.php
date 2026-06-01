@@ -8,6 +8,7 @@ use App\Models\HomeFaq;
 use App\Models\HomeInfoCard;
 use App\Models\HomeInfoListItem;
 use App\Models\HomeStartCard;
+use App\Models\ServiceInfoCard;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -111,6 +112,51 @@ class DashboardTest extends TestCase
             ->assertRedirect(route('dashboard.nosotros'));
 
         $this->assertDatabaseEmpty('about_info_cards');
+        $this->assertFalse(Storage::disk('public')->exists($card->image_path));
+    }
+
+    public function test_authenticated_users_can_manage_service_info_cards_in_servicios_page()
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->create();
+        $this->actingAs($user);
+
+        $this->get(route('dashboard.servicios'))
+            ->assertOk()
+            ->assertInertia(fn (Assert $page) => $page
+                ->component('dashboard/servicios')
+                ->has('infoCards', 0)
+            );
+
+        $this->post(route('dashboard.servicios.info-cards.store'), [
+            'title' => 'Spa y bienestar',
+            'description' => 'Servicio relajante con atencion personalizada para cada huesped.',
+            'image' => UploadedFile::fake()->image('service-info-card.jpg'),
+        ])->assertRedirect(route('dashboard.servicios'));
+
+        $card = ServiceInfoCard::query()->first();
+
+        $this->assertNotNull($card);
+        $this->assertSame('Spa y bienestar', $card->title);
+        $this->assertSame('Servicio relajante con atencion personalizada para cada huesped.', $card->description);
+        $this->assertTrue(Storage::disk('public')->exists($card->image_path));
+
+        $this->put(route('dashboard.servicios.info-cards.update', $card), [
+            'title' => 'Spa premium',
+            'description' => 'Mensaje actualizado para el servicio destacado.',
+        ])->assertRedirect(route('dashboard.servicios'));
+
+        $card->refresh();
+
+        $this->assertSame('Spa premium', $card->title);
+        $this->assertSame('Mensaje actualizado para el servicio destacado.', $card->description);
+        $this->assertNotNull($card->image_path);
+
+        $this->delete(route('dashboard.servicios.info-cards.destroy', $card))
+            ->assertRedirect(route('dashboard.servicios'));
+
+        $this->assertDatabaseEmpty('service_info_cards');
         $this->assertFalse(Storage::disk('public')->exists($card->image_path));
     }
 
