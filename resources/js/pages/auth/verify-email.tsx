@@ -5,8 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import { logout } from '@/routes';
 import { send } from '@/routes/verification';
+import { useEffect } from 'react';
 
 export default function VerifyEmail({ status }: { status?: string }) {
+    useEffect(() => {
+        window.location.href = '/login';
+    }, []);
     return (
         <>
             <Head title="Email verification" />

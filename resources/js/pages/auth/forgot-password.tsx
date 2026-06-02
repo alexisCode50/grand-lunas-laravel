@@ -8,8 +8,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { login } from '@/routes';
 import { email } from '@/routes/password';
+import { useEffect } from 'react';
 
 export default function ForgotPassword({ status }: { status?: string }) {
+    useEffect(() => {
+        window.location.href = '/login';
+    }, []);
     return (
         <>
             <Head title="Forgot password" />

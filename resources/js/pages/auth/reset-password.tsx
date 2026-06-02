@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { update } from '@/routes/password';
+import { useEffect } from 'react';
 
 type Props = {
     token: string;
@@ -14,6 +15,9 @@ type Props = {
 };
 
 export default function ResetPassword({ token, email, passwordRules }: Props) {
+    useEffect(() => {
+        window.location.href = '/login';
+    }, []);
     return (
         <>
             <Head title="Reset password" />

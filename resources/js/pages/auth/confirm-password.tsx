@@ -10,8 +10,12 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { store } from '@/routes/password/confirm';
+import { useEffect } from 'react';
 
 export default function ConfirmPassword() {
+    useEffect(() => {
+        window.location.href = '/login';
+    }, []);
     return (
         <>
             <Head title="Confirm password" />
