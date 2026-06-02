@@ -29,7 +29,7 @@ export function InfoCardsSection({
     seed = [],
     fields,
     resourcePath = '/dashboard/inicio/tarjetas',
-    maxItems = 3,
+    maxItems = 50,
 }: Props) {
     const activeFields = fields ?? defaultFields;
     const [open, setOpen] = useState(false);

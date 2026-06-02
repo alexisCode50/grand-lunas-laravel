@@ -10,7 +10,7 @@ use Illuminate\Validation\Rule;
 
 class AboutInfoCardController extends Controller
 {
-    private const MAX_INFO_CARDS = 3;
+    private const MAX_INFO_CARDS = 50;
 
     public function store(Request $request): RedirectResponse
     {

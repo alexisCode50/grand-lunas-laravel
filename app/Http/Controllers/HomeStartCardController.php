@@ -40,12 +40,6 @@ class HomeStartCardController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        if (HomeStartCard::query()->count() >= self::MAX_START_CARDS) {
-            return back()->withErrors([
-                'title' => 'Solo se permiten 3 tarjetas de inicio en la página de nosotros.',
-            ]);
-        }
-
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'image' => [
